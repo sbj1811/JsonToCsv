@@ -1,0 +1,6 @@
+last_name,id,first_name,middle_initial,birth_year,crm_id,anonymous_user,profession,e_equals_mc_squared,company,birth_city,
+Doe,1,Jane,
+Public,2,John,Q,1971,
+,3,,,,abc123,true,
+Einstein,4,Albert,,1879,,,Scientist,true,******,
+Hopper,5,Grace,,,,,Computer Scientist,,****** Metrics,New York,
