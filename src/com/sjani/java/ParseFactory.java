@@ -9,6 +9,7 @@ public class ParseFactory {
 
     /**
      * Gets requested parser type
+     *
      * @param parseType type of parser requested
      * @return parser type
      */

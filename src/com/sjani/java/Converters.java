@@ -23,14 +23,14 @@ public class Converters {
         if (jsonArray != null && jsonArray.size() > 0) {
             LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
             int columnCount = 0;
-            for (int i = 0; i < jsonArray.size(); i++) {
+            for (Object jsonObject : jsonArray) {
                 ArrayList<String> outputItem = new ArrayList<>();
-                String s = jsonArray.get(i).toString();
+                String s = jsonObject.toString();
                 String[] fields = s.replaceAll("[\"{}]+", "").split("[,]+");
-                for (int j = 0; j < fields.length; j++) {
-                    String[] keyValuePair = fields[j].split(":");
+                for (String field : fields) {
+                    String[] keyValuePair = field.split(":");
                     if (!keyValuePair[0].isEmpty()) {
-                        String value = "";
+                        String value;
                         if (keyValuePair.length > 1) {
                             value = redactString(keyValuePair[1], BRANCH);
                         } else {
@@ -51,7 +51,7 @@ public class Converters {
                                 outputItem.add(value);
                             }
                         } else {
-                            if(outputItem.size()>columns.get(keyValuePair[0])) {
+                            if (outputItem.size() > columns.get(keyValuePair[0])) {
                                 outputItem.set(columns.get(keyValuePair[0]), value);
                             } else {
                                 outputItem.add(columns.get(keyValuePair[0]), value);

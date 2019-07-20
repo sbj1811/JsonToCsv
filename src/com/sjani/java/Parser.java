@@ -8,8 +8,9 @@ import java.util.List;
 public interface Parser {
     /**
      * Generic method to parse input file
+     *
      * @param inputFile input file to be parsed
      * @return List of String arrays
      */
-    public List<String[]> Parse(String inputFile);
+    List<String[]> Parse(String inputFile);
 }

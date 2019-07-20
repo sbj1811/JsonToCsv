@@ -9,6 +9,7 @@ public class WriterFactory {
 
     /**
      * Gets requested writer type
+     *
      * @param writerType type of writer requested
      * @return writer type
      */

@@ -19,18 +19,19 @@ public class JsonParser implements Parser {
 
     /**
      * Parses a input file of JSON array and returns a list of String arrays
+     *
      * @param inputFile input file to be parsed to extract JSON array
      * @return List of String arrays
      */
     @Override
     public List<String[]> Parse(String inputFile) {
-        if (inputFile.isEmpty()){
+        if (inputFile.isEmpty()) {
             return null;
         }
         List<String[]> lines = new ArrayList<>();
         try {
             StringBuilder builder = new StringBuilder();
-            Files.lines(Paths.get(inputFile), StandardCharsets.UTF_8).forEach(jsonObject -> builder.append(jsonObject));
+            Files.lines(Paths.get(inputFile), StandardCharsets.UTF_8).forEach(builder::append);
             JSONParser jsonParser = new JSONParser();
             String stream = builder.toString();
             JSONArray jsonArray = null;
@@ -38,9 +39,7 @@ public class JsonParser implements Parser {
                 jsonArray = (JSONArray) jsonParser.parse(stream);
             }
             lines = new Converters().JSONArrayToList(jsonArray);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
         return lines;
