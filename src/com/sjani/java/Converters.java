@@ -1,6 +1,7 @@
 package com.sjani.java;
 
-import org.json.simple.JSONArray;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -20,48 +21,27 @@ public class Converters {
      */
     public List<String[]> JSONArrayToList(JSONArray jsonArray) {
         List<String[]> lines = new ArrayList<>();
-        if (jsonArray != null && jsonArray.size() > 0) {
+        if (jsonArray != null && jsonArray.length() > 0) {
             LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
             int columnCount = 0;
-            for (Object jsonObject : jsonArray) {
-                ArrayList<String> outputItem = new ArrayList<>();
-                String s = jsonObject.toString();
-                String[] fields = s.replaceAll("[\"{}]+", "").split("[,]+");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                HashMap<Integer, String> columnPositionToValueMap = new HashMap<>();
+                Set<String> fields = jsonObject.keySet();
                 for (String field : fields) {
-                    String[] keyValuePair = field.split(":");
-                    if (!keyValuePair[0].isEmpty()) {
-                        String value;
-                        if (keyValuePair.length > 1) {
-                            value = redactString(keyValuePair[1], BRANCH);
-                        } else {
-                            value = "";
-                        }
-                        if (!columns.containsKey(keyValuePair[0])) {
-                            columns.put(keyValuePair[0], columnCount++);
-                        }
-                        if (outputItem.size() < columns.get(keyValuePair[0])) {
-                            int index = 0;
-                            if (outputItem.size() < columns.get(keyValuePair[0])) {
-                                while (index <= outputItem.size() && outputItem.size() > 0) {
-                                    index++;
-                                }
-                                while (outputItem.size() < columns.get(keyValuePair[0])) {
-                                    outputItem.add("");
-                                }
-                                outputItem.add(value);
-                            }
-                        } else {
-                            if (outputItem.size() > columns.get(keyValuePair[0])) {
-                                outputItem.set(columns.get(keyValuePair[0]), value);
-                            } else {
-                                outputItem.add(columns.get(keyValuePair[0]), value);
-                            }
-                        }
-
+                    String value = redactString(jsonObject.get(field).toString(), BRANCH);
+                    if (!columns.containsKey(field)) {
+                        columns.put(field, columnCount++);
                     }
+                    columnPositionToValueMap.put(columns.get(field), value);
                 }
-                lines.add(outputItem.toArray(new String[0]));
-                outputItem.clear();
+                int columnIndex = 0;
+                List<String> lineList = new ArrayList<>();
+                while (columnIndex < columns.size()) {
+                    lineList.add(columnPositionToValueMap.getOrDefault(columnIndex, ""));
+                    columnIndex++;
+                }
+                lines.add(lineList.toArray(new String[0]));
             }
             String[] columnNames = columns.keySet().toArray(new String[0]);
             lines.add(0, columnNames);

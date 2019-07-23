@@ -1,8 +1,9 @@
 package com.sjani.java;
 
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -32,14 +33,16 @@ public class JsonParser implements Parser {
         try {
             StringBuilder builder = new StringBuilder();
             Files.lines(Paths.get(inputFile), StandardCharsets.UTF_8).forEach(builder::append);
-            JSONParser jsonParser = new JSONParser();
-            String stream = builder.toString();
-            JSONArray jsonArray = null;
-            if (!stream.isEmpty()) {
-                jsonArray = (JSONArray) jsonParser.parse(stream);
+            String FileAsString = builder.toString();
+            if (!FileAsString.isEmpty()) {
+                JSONArray jsonArray = new JSONArray(FileAsString);
+                if (!(jsonArray == null || jsonArray.length() == 0)) {
+                    lines = new Converters().JSONArrayToList(jsonArray);
+                }
+            } else {
+                System.out.println("Input JSON File is empty. Please check the file contents");
             }
-            lines = new Converters().JSONArrayToList(jsonArray);
-        } catch (IOException | ParseException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return lines;
