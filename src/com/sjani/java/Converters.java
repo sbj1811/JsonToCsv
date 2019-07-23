@@ -1,7 +1,7 @@
 package com.sjani.java;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.util.*;
 
@@ -21,11 +21,11 @@ public class Converters {
      */
     public List<String[]> JSONArrayToList(JSONArray jsonArray) {
         List<String[]> lines = new ArrayList<>();
-        if (jsonArray != null && jsonArray.length() > 0) {
+        if (jsonArray != null && jsonArray.size() > 0) {
             LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
             int columnCount = 0;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                 HashMap<Integer, String> columnPositionToValueMap = new HashMap<>();
                 Set<String> fields = jsonObject.keySet();
                 for (String field : fields) {
