@@ -1,18 +1,20 @@
 package com.sjani.java;
 
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * JSON to CSV converter
  */
 public class JsonToCsv {
 
-    private static final String INPUT_FILE_NAME = "sample.json";
-    private static final String JSON = "json";
-    private static final String CSV = "csv";
+    private static final String INPUT_FILE_NAME = "inputfile";
+    private static final String PARSER = "parser";
+    private static final String WRITER = "writer";
     private static Path inputPath;
     private static Path outputPathJson;
 
@@ -22,7 +24,17 @@ public class JsonToCsv {
      * @param args Output File name
      */
     public static void main(String[] args) {
-        inputPath = Paths.get(INPUT_FILE_NAME);
+        Properties properties = new Properties();
+        try {
+            properties = new PropertiesValues().getProperties();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (properties == null || properties.isEmpty()) {
+            System.out.println("Error: Please check config/properties file");
+            return;
+        }
+        inputPath = Paths.get(properties.getProperty(INPUT_FILE_NAME));
         if (args.length > 0) {
             outputPathJson = Paths.get(args[0]);
         } else {
@@ -31,8 +43,8 @@ public class JsonToCsv {
             System.out.println("java -jar JsonToCsv.jar sample.csv");
             return;
         }
-        Parser jsonParser = getParser(JSON);
-        Writer csvWriter = getWriter(CSV);
+        Parser jsonParser = getParser(properties.getProperty(PARSER));
+        Writer csvWriter = getWriter(properties.getProperty(WRITER));
         List<String[]> listOfLines = jsonParser.Parse(inputPath.toAbsolutePath().toString());
         if (listOfLines != null || listOfLines.size() > 0) {
             csvWriter.write(listOfLines, outputPathJson.toAbsolutePath().toString());
